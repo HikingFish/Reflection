@@ -10,9 +10,10 @@ internal class Program
             Console.WriteLine("Reflection Practice/Example:");
             Console.WriteLine("1. Get Private Value and Change it");
             Console.WriteLine("2. Get Method and Variable");
+            Console.WriteLine("3. Get Private Value, Change it and Invoke Private Method");
             Console.WriteLine("Select an Option");
 
-            string input = Console.ReadLine();
+            string? input = Console.ReadLine();
 
             if (!Enum.TryParse<Options>(input, out Options choice) || !Enum.IsDefined(typeof(Options), choice))
             {
@@ -27,7 +28,7 @@ internal class Program
 
                     var SecretAgentInstance = new SecretAgent();
 
-                    object? currentValue = annonymousField.GetValue(SecretAgentInstance);
+                    object? currentValue = annonymousField!.GetValue(SecretAgentInstance);
                     Console.WriteLine(currentValue);
 
                     annonymousField.SetValue(SecretAgentInstance, "008");
@@ -60,7 +61,20 @@ internal class Program
                     break;
 
                 case Options.GetPrivateValueAndChangeItAndRunPrivateMethod:
+                    FieldInfo? vault = typeof(BankVault).GetField("_secretCode", BindingFlags.NonPublic | BindingFlags.Instance);
+                    MethodInfo? vaultMethod = typeof(BankVault).GetMethod("RevealSecret", BindingFlags.NonPublic | BindingFlags.Instance);
+                    BankVault bankVault = new BankVault();
+
+                    object? secretCode = vaultMethod!.Invoke(bankVault, null);
+                    Console.WriteLine(secretCode);
+
+                    vault!.SetValue(bankVault, "1234");
+
+                    secretCode = vaultMethod.Invoke(bankVault, null);
+                    Console.WriteLine(secretCode);
+
                     break;
+
             }
         }
     }
@@ -69,6 +83,7 @@ internal class Program
     {
         GetPrivateValueAndChangeIt = 1,
         GetMethodAndVariable = 2,
-        GetPrivateValueAndChangeItAndRunPrivateMethod = 3
+        GetPrivateValueAndChangeItAndRunPrivateMethod = 3,
+        GetInstanceAndStaticMethod = 4
     }
 }
