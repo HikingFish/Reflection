@@ -11,6 +11,7 @@ internal class Program
             Console.WriteLine("1. Get Private Value and Change it");
             Console.WriteLine("2. Get Method and Variable");
             Console.WriteLine("3. Get Private Value, Change it and Invoke Private Method");
+            Console.WriteLine("4. Get Static and Instance Method");
             Console.WriteLine("Select an Option");
 
             string? input = Console.ReadLine();
@@ -41,19 +42,19 @@ internal class Program
                     Type type = typeof(Car);
 
                     Console.WriteLine("Property Info: ");
-                    foreach(PropertyInfo prop in type.GetProperties())
+                    foreach (PropertyInfo prop in type.GetProperties())
                     {
                         Console.WriteLine($" -> {prop.PropertyType.Name} {prop.Name}");
                     }
 
                     Console.WriteLine(("Field Info: "));
-                    foreach(FieldInfo info in type.GetFields())
+                    foreach (FieldInfo info in type.GetFields())
                     {
                         Console.WriteLine($" -> {info.FieldType.Name} {info.Name}");
                     }
 
                     Console.WriteLine("Method Info: ");
-                    foreach(MethodInfo method in type.GetMethods(BindingFlags.Public | BindingFlags.Instance))
+                    foreach (MethodInfo method in type.GetMethods(BindingFlags.Public | BindingFlags.Instance))
                     {
                         Console.WriteLine($" -> {method.ReturnType.Name} {method.Name}");
                     }
@@ -75,6 +76,18 @@ internal class Program
 
                     break;
 
+                case Options.GetInstanceAndStaticMethod:
+                    Type calculator = typeof(Calculator);
+                    Calculator calculatorInstance = new Calculator();
+                    foreach (MethodInfo info in calculator.GetMethods(BindingFlags.Public | BindingFlags.Instance))
+                    {
+                        Console.WriteLine($"Instance Method: {info.Name}");
+                    }
+                    foreach (MethodInfo info in typeof(Calculator).GetMethods(BindingFlags.Public | BindingFlags.Static))
+                    {
+                        Console.WriteLine($"Static Method: {info.Name}");
+                    }
+                    break;
             }
         }
     }
