@@ -12,6 +12,7 @@ internal class Program
             Console.WriteLine("2. Get Method and Variable");
             Console.WriteLine("3. Get Private Value, Change it and Invoke Private Method");
             Console.WriteLine("4. Get Static and Instance Method");
+            Console.WriteLine("5. Instantiate Class with String Input");
             Console.WriteLine("Select an Option");
 
             string? input = Console.ReadLine();
@@ -88,6 +89,15 @@ internal class Program
                         Console.WriteLine($"Static Method: {info.Name}");
                     }
                     break;
+
+                case Options.InstantiateClass:
+                    string? className = Console.ReadLine();
+                    Type stringClass = Type.GetType(className!, throwOnError: true, ignoreCase: true);
+                    var instantiatedClass = Activator.CreateInstance(stringClass!);
+                    MethodInfo DogOrCat = stringClass.GetMethod("MakeSound", BindingFlags.Public | BindingFlags.Instance);
+                    DogOrCat.Invoke(instantiatedClass, null);
+
+                    break;
             }
         }
     }
@@ -97,6 +107,7 @@ internal class Program
         GetPrivateValueAndChangeIt = 1,
         GetMethodAndVariable = 2,
         GetPrivateValueAndChangeItAndRunPrivateMethod = 3,
-        GetInstanceAndStaticMethod = 4
+        GetInstanceAndStaticMethod = 4,
+        InstantiateClass = 5
     }
 }
