@@ -15,6 +15,7 @@ internal class Program
             Console.WriteLine("4. Get Static and Instance Method");
             Console.WriteLine("5. Instantiate Class with String Input");
             Console.WriteLine("6. Dynamic Type Instantiation with Generics");
+            Console.WriteLine("7. Dynamic Bypass Compile Time Checks");
             Console.WriteLine("Select an Option");
 
             string? input = Console.ReadLine();
@@ -124,6 +125,15 @@ internal class Program
                     }
 
                     break;
+
+                case Options.DynamicBypassCompileTimeChecks:
+                    Type openClassType = typeof(Printer<>);
+                    Type closedClassType = openClassType.MakeGenericType(typeof(string));
+                    dynamic instantiatedClass2 = Activator.CreateInstance(closedClassType);
+
+                    instantiatedClass2.PrintValue("42");
+
+                    break;
             }
         }
     }
@@ -135,6 +145,7 @@ internal class Program
         GetPrivateValueAndChangeItAndRunPrivateMethod = 3,
         GetInstanceAndStaticMethod = 4,
         InstantiateClass = 5,
-        DynamicTypeInstantiation = 6
+        DynamicTypeInstantiation = 6,
+        DynamicBypassCompileTimeChecks = 7
     }
 }
