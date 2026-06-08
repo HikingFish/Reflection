@@ -16,6 +16,7 @@ internal class Program
             Console.WriteLine("5. Instantiate Class with String Input");
             Console.WriteLine("6. Dynamic Type Instantiation with Generics");
             Console.WriteLine("7. Dynamic Bypass Compile Time Checks");
+            Console.WriteLine("8. Plugin Invoker");
             Console.WriteLine("Select an Option");
 
             string? input = Console.ReadLine();
