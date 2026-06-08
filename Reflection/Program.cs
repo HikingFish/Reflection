@@ -134,6 +134,21 @@ internal class Program
                     instantiatedClass2.PrintValue("42");
 
                     break;
+                case Options.PluginInvoker:
+                    object data = "Hello, Reflection!";
+
+                    Type requiredInterface = typeof(IProcessor<>).MakeGenericType(data.GetType());
+                    Assembly currentAssembly = Assembly.GetExecutingAssembly();
+                    Type concreteType = currentAssembly.GetTypes().FirstOrDefault(
+                            t => t.IsClass &&
+                            !t.IsAbstract &&
+                            requiredInterface.IsAssignableFrom(t)
+                        );
+                    Console.WriteLine($"Discovered plugin: {concreteType.Name}");
+                    dynamic instantiatedPlugin = Activator.CreateInstance(concreteType);
+                    instantiatedPlugin.Process(data.ToString());
+
+                    break;
             }
         }
     }
@@ -146,6 +161,7 @@ internal class Program
         GetInstanceAndStaticMethod = 4,
         InstantiateClass = 5,
         DynamicTypeInstantiation = 6,
-        DynamicBypassCompileTimeChecks = 7
+        DynamicBypassCompileTimeChecks = 7,
+        PluginInvoker = 8
     }
 }
