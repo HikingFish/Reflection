@@ -1,5 +1,6 @@
 ﻿using Reflection;
 using System.Reflection;
+using System.Reflection.Metadata.Ecma335;
 
 internal class Program
 {
@@ -13,6 +14,7 @@ internal class Program
             Console.WriteLine("3. Get Private Value, Change it and Invoke Private Method");
             Console.WriteLine("4. Get Static and Instance Method");
             Console.WriteLine("5. Instantiate Class with String Input");
+            Console.WriteLine("6. Dynamic Type Instantiation with Generics");
             Console.WriteLine("Select an Option");
 
             string? input = Console.ReadLine();
@@ -98,6 +100,30 @@ internal class Program
                     DogOrCat.Invoke(instantiatedClass, null);
 
                     break;
+                case Options.DynamicTypeInstantiation:
+                    Console.WriteLine("Enter variable type System.Int32 or System.String");
+                    string? innerListType = Console.ReadLine();
+
+                    Type? currentType = Type.GetType(innerListType!, throwOnError: true, ignoreCase: true);
+                    Type openListType = typeof(List<>);
+                    Type closedListType = openListType.MakeGenericType(currentType!);
+
+                    var instantiatedList = Activator.CreateInstance(closedListType);
+
+                    Type[] TypeArguments = closedListType.GetGenericArguments();
+                    Type listContentType = TypeArguments[0];
+                    Console.WriteLine($"The list holds elements of type: {listContentType.Name}");
+
+                    if (listContentType == typeof(string))
+                    {
+                        Console.WriteLine("Confirmed: This is a string list.");
+                    }
+                    else if (listContentType == typeof(int))
+                    {
+                        Console.WriteLine("Confirmed: This is an int list.");
+                    }
+
+                    break;
             }
         }
     }
@@ -108,6 +134,7 @@ internal class Program
         GetMethodAndVariable = 2,
         GetPrivateValueAndChangeItAndRunPrivateMethod = 3,
         GetInstanceAndStaticMethod = 4,
-        InstantiateClass = 5
+        InstantiateClass = 5,
+        DynamicTypeInstantiation = 6
     }
 }
