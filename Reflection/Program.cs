@@ -17,6 +17,7 @@ internal class Program
             Console.WriteLine("6. Dynamic Type Instantiation with Generics");
             Console.WriteLine("7. Dynamic Bypass Compile Time Checks");
             Console.WriteLine("8. Plugin Invoker");
+            Console.WriteLine("9. Custom Attribute");
             Console.WriteLine("Select an Option");
 
             string? input = Console.ReadLine();
@@ -30,7 +31,7 @@ internal class Program
             switch (choice)
             {
                 case Options.GetPrivateValueAndChangeIt:
-                    var annonymousField = typeof(SecretAgent).GetField("_codename", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+                    FieldInfo annonymousField = typeof(SecretAgent).GetField("_codename", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
 
                     var SecretAgentInstance = new SecretAgent();
 
@@ -95,6 +96,7 @@ internal class Program
                     break;
 
                 case Options.InstantiateClass:
+                    //needs namespace
                     string? className = Console.ReadLine();
                     Type stringClass = Type.GetType(className!, throwOnError: true, ignoreCase: true);
                     var instantiatedClass = Activator.CreateInstance(stringClass!);
@@ -150,6 +152,17 @@ internal class Program
                     instantiatedPlugin.Process(data.ToString());
 
                     break;
+                
+                case Options.CustomAttribute:
+                    Customer validCustomer = new Customer("John");
+                    Customer invalidCustomer = new Customer("LonglonglongJohn");
+
+                    bool isValid = ValidationEngine.Validate(validCustomer);
+                    bool isInvalid = ValidationEngine.Validate(invalidCustomer);
+
+                    Console.WriteLine($"John is {isValid} and LonglonglongJohn is {isInvalid}");
+
+                    break;
             }
         }
     }
@@ -163,6 +176,7 @@ internal class Program
         InstantiateClass = 5,
         DynamicTypeInstantiation = 6,
         DynamicBypassCompileTimeChecks = 7,
-        PluginInvoker = 8
+        PluginInvoker = 8,
+        CustomAttribute = 9
     }
 }
