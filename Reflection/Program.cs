@@ -1,6 +1,7 @@
 ﻿using Reflection;
 using System.Reflection;
 using System.Reflection.Metadata.Ecma335;
+using Contracts;
 
 internal class Program
 {
@@ -18,6 +19,7 @@ internal class Program
             Console.WriteLine("7. Dynamic Bypass Compile Time Checks");
             Console.WriteLine("8. Plugin Invoker");
             Console.WriteLine("9. Custom Attribute");
+            Console.WriteLine("10. Dll file invoker");
             Console.WriteLine("Select an Option");
 
             string? input = Console.ReadLine();
@@ -163,6 +165,21 @@ internal class Program
                     Console.WriteLine($"John is {isValid} and LonglonglongJohn is {isInvalid}");
 
                     break;
+
+                case Options.DynamicAssemblyLoading:
+                    string dllPath = @"/Users/cheong/Projects/ReflectionPlugin/ReflectionPlugin/bin/Debug/net10.0/ReflectionPlugin.dll";
+
+                    Assembly pluginAssembly = Assembly.LoadFrom(dllPath);
+
+                    Type pluginType = pluginAssembly.GetTypes().FirstOrDefault(t =>
+                        t.IsClass &&
+                        !t.IsAbstract &&
+                        typeof(IPlugin).IsAssignableFrom(t));
+
+                    IPlugin instantiatedPluginDll = (IPlugin)Activator.CreateInstance(pluginType);
+                    instantiatedPluginDll.Execute();
+
+                    break;
             }
         }
     }
@@ -177,6 +194,7 @@ internal class Program
         DynamicTypeInstantiation = 6,
         DynamicBypassCompileTimeChecks = 7,
         PluginInvoker = 8,
-        CustomAttribute = 9
+        CustomAttribute = 9,
+        DynamicAssemblyLoading = 10
     }
 }
